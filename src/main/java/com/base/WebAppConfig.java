@@ -26,9 +26,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 		registry.addInterceptor(new CustomInterceptor()).addPathPatterns("/**");
 		super.addInterceptors(registry);
 	}
-	@Autowired
-    private Environment env;
-
+	
     @Bean(name="mydateSource")
     @Primary
     public DataSource dataSource() {

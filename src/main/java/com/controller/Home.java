@@ -1,6 +1,7 @@
 package com.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +16,15 @@ import com.service.XService;
 public class Home extends BaseController {
 	@Autowired
 	XService service;
+	
+	@Autowired
+    private Environment env;//获取application.properties
+
 
 	@RequestMapping("/index/{name}")
 	public String tohome(Model model, @PathVariable("name") String name) {
 		model.addAttribute("name", name);
+		System.out.println(env.getProperty("spring.main.show-banner"));
 		return "home";
 	}
 
