@@ -64,8 +64,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
-			<exclusions><!--排除tomcat-jdbc 使用druid数据源 如不排除 ，在application.properties没有datasource相关配置项时 
-					启动会报错 -->
+			<exclusions><!--排除tomcat-jdbc 使用druid数据源 如不排除 ，在application.properties没有datasource相关配置项时启动会报错 -->
 				<exclusion>
 					<groupId>org.apache.tomcat</groupId>
 					<artifactId>tomcat-jdbc</artifactId>
