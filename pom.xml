@@ -12,6 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<version.feilong-platform>1.10.3</version.feilong-platform>
 	</properties>
 	<repositories>
 		<repository>
@@ -46,31 +47,31 @@
 		</dependency>
 
 		<!--collections4集合工具类 -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
 			<version>4.1</version>
-		</dependency>
+		</dependency> -->
 
 		<!--飞龙工具类依赖 -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-		</dependency>
+		</dependency> -->
 
 		<!--飞龙工具类依赖 -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>
 			<version>2.4</version>
 			<classifier>jdk15</classifier>
-		</dependency>
+		</dependency> -->
 
 		<!--飞龙工具类 -->
 		<dependency>
 			<groupId>com.feilong.platform</groupId>
 			<artifactId>feilong-core</artifactId>
-			<version>1.10.2</version>
+			<version>${version.feilong-platform}</version>
 		</dependency>
 
 
@@ -84,7 +85,8 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
-			<exclusions><!--排除tomcat-jdbc 使用druid数据源  如不排除 ，在application.properties没有datasource相关配置项时 启动会报错 -->
+			<exclusions><!--排除tomcat-jdbc 使用druid数据源 如不排除 ，在application.properties没有datasource相关配置项时 
+					启动会报错 -->
 				<exclusion>
 					<groupId>org.apache.tomcat</groupId>
 					<artifactId>tomcat-jdbc</artifactId>
@@ -112,7 +114,7 @@
 			<!-- 要为provided -->
 			<scope>provided</scope>
 		</dependency>
-		<!--druid数据源-->
+		<!--druid数据源 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid</artifactId>
