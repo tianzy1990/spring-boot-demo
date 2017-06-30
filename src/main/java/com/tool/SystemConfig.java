@@ -1,11 +1,15 @@
 package com.tool;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 @Component
 public class SystemConfig {
@@ -65,6 +69,19 @@ public class SystemConfig {
 	public static Properties getProperties() {
 		return props;
 	}
+	
+	/**
+	 * 获取任意properyies属性
+	 * 
+	 * @return
+	 * @throws IOException 
+	 */
+	public static String getAnyPropertie(String filePath, String key) throws IOException {
+		InputStream inputstream = SystemConfig.class.getResourceAsStream("/application.properties");
+		Properties properties = new Properties();
+		properties.load(inputstream);
+		return properties.getProperty(key);
+	}
 
 	/**
 	 * 
@@ -74,9 +91,14 @@ public class SystemConfig {
 	 * @date 2017年6月30日下午5:11:13
 	 *
 	 * @param args
+	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) {
-		new SystemConfig();
+	public static void main(String[] args) throws Exception {
+		props=new Properties();
+		File file = ResourceUtils.getFile("classpath:application.properties");
+		InputStream filea = SystemConfig.class.getResourceAsStream("/application.properties");
+		System.out.println(file.getName());
+		props.load(filea);
 		System.out.println(getProperty("server.port"));
 	}
 }
