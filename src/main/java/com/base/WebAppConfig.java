@@ -2,12 +2,10 @@ package com.base;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -27,7 +25,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 		super.addInterceptors(registry);
 	}
 	
-    @Bean(name="mydateSource")
+    @Bean(name="dataSource1")
     @Primary
     public DataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
@@ -44,7 +42,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         dataSource.setPoolPreparedStatements(false);
         return dataSource;
     }
-    @Bean(name="mydate")
+    @Bean(name="dataSource2")
     public DataSource dataSource2() {
     	DruidDataSource dataSource = new DruidDataSource();
     	dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/world?characterEncoding=utf-8&useSSL=false");
@@ -62,11 +60,11 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     }
     //如果将tomcat-jdbc排除 也不会有默认的事务关系者 而且多数据源时需要手动创建多个事务管理器
     @Bean(name = "txManager1")
-    public PlatformTransactionManager txManager1(@Qualifier(value="mydateSource")DataSource dataSource) {
+    public PlatformTransactionManager txManager1(@Qualifier(value="dataSource1")DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
     @Bean(name = "txManager2")
-    public PlatformTransactionManager txManager2(@Qualifier(value="mydate")DataSource dataSource) {
+    public PlatformTransactionManager txManager2(@Qualifier(value="dataSource2")DataSource dataSource) {
     	return new DataSourceTransactionManager(dataSource);
     }
 }
