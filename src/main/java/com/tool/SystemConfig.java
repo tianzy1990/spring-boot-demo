@@ -71,13 +71,18 @@ public class SystemConfig {
 	}
 	
 	/**
-	 * 获取任意properyies属性
-	 * 
+	 * @Title: getAnyPropertie
+	 * @Description: 获取任意属性值
+	 * @author tianzy
+	 * @date 2017年6月30日下午5:31:29
+	 *
+	 * @param filePath
+	 * @param key
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static String getAnyPropertie(String filePath, String key) throws IOException {
-		InputStream inputstream = SystemConfig.class.getResourceAsStream("/application.properties");
+		InputStream inputstream = SystemConfig.class.getResourceAsStream(filePath);
 		Properties properties = new Properties();
 		properties.load(inputstream);
 		return properties.getProperty(key);
