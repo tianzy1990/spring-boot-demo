@@ -12,7 +12,12 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.tool.Page;
@@ -38,11 +43,11 @@ public class BaseDao {
 		return namedParameterJdbcDaoSupport;
 	}
 
-	public <T> T selectById(String sql, Long id, T t, NamedParameterJdbcDaoSupport jdbc) throws Exception {
+	public <T> T selectById(String sql, Long id, T t, NamedParameterJdbcDaoSupport jdbc) {
 		return (T) jdbc.getJdbcTemplate().queryForObject(sql, t.getClass(), id);
 	}
 
-	public Map<String, Object> selectById(String sql, Long id, NamedParameterJdbcDaoSupport jdbc) throws Exception {
+	public Map<String, Object> selectById(String sql, Long id, NamedParameterJdbcDaoSupport jdbc) {
 		return jdbc.getJdbcTemplate().queryForMap(sql, id);
 	}
 
@@ -54,19 +59,19 @@ public class BaseDao {
 		return selectByMap(sql, getParamMap(entity), t, jdbc);
 	}
 
-	public <T> T selectByMap(String sql, Map<String, ?> map, T t, NamedParameterJdbcDaoSupport jdbc) throws Exception {
+	public <T> T selectByMap(String sql, Map<String, ?> map, T t, NamedParameterJdbcDaoSupport jdbc) {
 		return (T) jdbc.getNamedParameterJdbcTemplate().queryForObject(sql, map, t.getClass());
 	}
 
-	public Map<String, Object> selectByMap(String sql, Map<String, ?> map, NamedParameterJdbcDaoSupport jdbc) throws Exception {
+	public Map<String, Object> selectByMap(String sql, Map<String, ?> map, NamedParameterJdbcDaoSupport jdbc) {
 		return jdbc.getNamedParameterJdbcTemplate().queryForMap(sql, map);
 	}
-	
-	public <T> T selectByParam(String sql, T t, NamedParameterJdbcDaoSupport jdbc, Object... param) throws Exception {
+
+	public <T> T selectByParam(String sql, T t, NamedParameterJdbcDaoSupport jdbc, Object... param) {
 		return (T) jdbc.getJdbcTemplate().queryForObject(sql, t.getClass(), param);
 	}
 
-	public Map<String, Object> selectByParam(String sql, NamedParameterJdbcDaoSupport jdbc, Object... param) throws Exception {
+	public Map<String, Object> selectByParam(String sql, NamedParameterJdbcDaoSupport jdbc, Object... param) {
 		return jdbc.getJdbcTemplate().queryForMap(sql, param);
 	}
 
@@ -78,19 +83,19 @@ public class BaseDao {
 		return pageByMap(sql, getParamMap(entity), entity, jdbc, pageIndex, pageSize);
 	}
 
-	public Page<Map<String, Object>> pageByMap(String sql, Map<String, Object> map, NamedParameterJdbcDaoSupport jdbc, int pageIndex, int pageSize) throws Exception {
+	public Page<Map<String, Object>> pageByMap(String sql, Map<String, Object> map, NamedParameterJdbcDaoSupport jdbc, int pageIndex, int pageSize) {
 		return getPageByMap(sql, jdbc, map, pageIndex, pageSize);
 	}
 
-	public <T> Page<T> pageByMap(String sql, Map<String, Object> map, T t, NamedParameterJdbcDaoSupport jdbc, int pageIndex, int pageSize) throws Exception {
+	public <T> Page<T> pageByMap(String sql, Map<String, Object> map, T t, NamedParameterJdbcDaoSupport jdbc, int pageIndex, int pageSize) {
 		return getPageByMap(sql, jdbc, map, pageIndex, pageSize, t);
 	}
-	
-	public Page<Map<String, Object>> pageByParam(String sql,  NamedParameterJdbcDaoSupport jdbc, int pageIndex, int pageSize, Object... param) throws Exception {
+
+	public Page<Map<String, Object>> pageByParam(String sql, NamedParameterJdbcDaoSupport jdbc, int pageIndex, int pageSize, Object... param) {
 		return getPageByParam(sql, jdbc, pageIndex, pageSize, param);
 	}
-	
-	public <T> Page<T> pageByParam(String sql, T t, NamedParameterJdbcDaoSupport jdbc, int pageIndex, int pageSize, Object... param) throws Exception {
+
+	public <T> Page<T> pageByParam(String sql, T t, NamedParameterJdbcDaoSupport jdbc, int pageIndex, int pageSize, Object... param) {
 		return getPageByParam(sql, jdbc, pageIndex, pageSize, t, param);
 	}
 
@@ -109,13 +114,52 @@ public class BaseDao {
 	public <T> List<T> getListByParam(String sql, NamedParameterJdbcDaoSupport jdbc, T t, Object... param) {
 		return (List<T>) jdbc.getJdbcTemplate().queryForList(sql, t.getClass(), param);
 	}
-	
+
+	public long insertByMap(String sql, NamedParameterJdbcDaoSupport jdbc, Map<String, Object> map, String key) {
+		KeyHolder keyholder = new GeneratedKeyHolder();
+		SqlParameterSource paramSource = new MapSqlParameterSource(map);
+		jdbc.getNamedParameterJdbcTemplate().update(sql, paramSource, keyholder, new String[] { key });
+		return jdbc.getNamedParameterJdbcTemplate().update(sql, map);
+	}
+
+	public long insertByEntity(String sql, NamedParameterJdbcDaoSupport jdbc, Object entity, String key) throws Exception {
+		return insertByMap(sql, jdbc, getParamMap(entity), key);
+	}
+
+	public int deleteById(String sql, long id, NamedParameterJdbcDaoSupport jdbc) {
+		return jdbc.getJdbcTemplate().update(sql, id);
+	}
+
+	public int deleteByMap(String sql, Map<String, Object> map, NamedParameterJdbcDaoSupport jdbc) {
+		return jdbc.getNamedParameterJdbcTemplate().update(sql, map);
+	}
+
+	public int deleteByParam(String sql, NamedParameterJdbcDaoSupport jdbc, Object... param) {
+		return jdbc.getJdbcTemplate().update(sql, param);
+	}
+
+	public int deleteByEntity(String sql, Object entity, NamedParameterJdbcDaoSupport jdbc) throws Exception {
+		return deleteByMap(sql, getParamMap(entity), jdbc);
+	}
+
+	public int updateByMap(String sql, Map<String, Object> map, NamedParameterJdbcDaoSupport jdbc) {
+		return jdbc.getNamedParameterJdbcTemplate().update(sql, map);
+	}
+
+	public int updateByParam(String sql, NamedParameterJdbcDaoSupport jdbc, Object... param) {
+		return jdbc.getJdbcTemplate().update(sql, param);
+	}
+
+	public int updateByEntity(String sql, Object entity, NamedParameterJdbcDaoSupport jdbc) throws Exception {
+		return updateByMap(sql, getParamMap(entity), jdbc);
+	}
+
 	private Page<Map<String, Object>> getPageByMap(String sql, NamedParameterJdbcDaoSupport jdbc, Map<String, Object> map, int pageIndex, int pageSize) {
 		if (pageIndex > 0 && pageSize > 0) {
 			sql = getSql(sql, pageIndex, pageSize);
 			List<Map<String, Object>> listByMap = getListByMap(sql, map, jdbc);
 			long totalRow = getTotalRow(jdbc);
-			return new Page<Map<String, Object>>(totalRow, pageIndex, pageSize,listByMap);
+			return new Page<Map<String, Object>>(totalRow, pageIndex, pageSize, listByMap);
 		} else {
 			return new Page<Map<String, Object>>(0, 0, 0, getListByMap(sql, map, jdbc));
 		}
@@ -166,6 +210,7 @@ public class BaseDao {
 		SqlRowSet queryForRowSet = jdbc.getJdbcTemplate().queryForRowSet(totalsql);
 		return queryForRowSet.getLong(1);
 	}
+
 	/**
 	 * 获取实体的参数
 	 * 
@@ -178,6 +223,7 @@ public class BaseDao {
 	 *            实体
 	 * @return
 	 * @throws Exception
+	 * @
 	 */
 	private HashMap<String, Object> getParamMap(Object obj) throws Exception {
 		Class<?> clazz = obj.getClass();
