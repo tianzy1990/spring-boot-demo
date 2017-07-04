@@ -19,7 +19,7 @@ public class SystemConfig {
 	/**
 	 * 
 	 * @Title: SystemConfig
-	 * @Description: TODO
+	 * @Description: 获取默认的配置文件
 	 * @param 
 	 * @author tianzy
 	 * @date 2017年6月30日下午5:09:43
@@ -91,7 +91,7 @@ public class SystemConfig {
 	/**
 	 * 
 	 * @Title: main
-	 * @Description: TODO
+	 * @Description: 测试main
 	 * @author tianzy
 	 * @date 2017年6月30日下午5:11:13
 	 *
