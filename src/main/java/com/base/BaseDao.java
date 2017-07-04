@@ -12,12 +12,12 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.tool.Page;
 
@@ -56,7 +56,7 @@ public class BaseDao {
 	 * @return
 	 */
 	public <T> T selectById(String sql, Long id, T t, NamedParameterJdbcDaoSupport jdbc) {
-		return (T) jdbc.getJdbcTemplate().queryForObject(sql, t.getClass(), id);
+		return jdbc.getJdbcTemplate().queryForObject(sql,new BeanPropertyRowMapper<T>((Class<T>) t.getClass()),id);  
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class BaseDao {
 	 * @return
 	 */
 	public <T> T selectByMap(String sql, Map<String, ?> map, T t, NamedParameterJdbcDaoSupport jdbc) {
-		return (T) jdbc.getNamedParameterJdbcTemplate().queryForObject(sql, map, t.getClass());
+		return (T) jdbc.getNamedParameterJdbcTemplate().queryForObject(sql,map,new BeanPropertyRowMapper<T>((Class<T>) t.getClass()));
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class BaseDao {
 	 * @return
 	 */
 	public <T> T selectByParam(String sql, T t, NamedParameterJdbcDaoSupport jdbc, Object... param) {
-		return (T) jdbc.getJdbcTemplate().queryForObject(sql, t.getClass(), param);
+		return (T) jdbc.getJdbcTemplate().queryForObject(sql, new BeanPropertyRowMapper<T>((Class<T>) t.getClass()), param);
 	}
 
 	/**
@@ -304,6 +304,7 @@ public class BaseDao {
 	public List<Map<String, Object>> getListByMap(String sql, Map<String, Object> map, NamedParameterJdbcDaoSupport jdbc) {
 		return jdbc.getNamedParameterJdbcTemplate().queryForList(sql, map);
 	}
+	
 
 	/**
 	 * 获取指定类型列表数据
@@ -319,7 +320,42 @@ public class BaseDao {
 	 * @return
 	 */
 	public <T> List<T> getListByMap(String sql, Map<String, Object> map, NamedParameterJdbcDaoSupport jdbc, T t) {
-		return (List<T>) jdbc.getNamedParameterJdbcTemplate().queryForList(sql, map, t.getClass());
+		return jdbc.getNamedParameterJdbcTemplate().query(sql, map, new BeanPropertyRowMapper<T>((Class<T>) t.getClass()));
+	}
+	
+	/**
+	 * 获取列表数据
+	 * @Title: getListByEntity 
+	 * @Description: 通过实体获取列表数据
+	 * @author tianzy
+	 * @date 2017年7月4日下午5:21:28
+	 *
+	 * @param sql sql语句
+	 * @param entity 实体
+	 * @param jdbc 数据源
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, Object>> getListByEntity(String sql, Object entity, NamedParameterJdbcDaoSupport jdbc) throws Exception {
+		return getListByMap(sql, getParamMap(entity), jdbc);
+	}
+	
+	/**
+	 * 获取列表数据
+	 * @Title: getListByEntity
+	 * @Description: 通过实体获取指定类型列表数据
+	 * @author tianzy
+	 * @date 2017年7月4日下午5:21:34
+	 *
+	 * @param sql sql语句
+	 * @param entity 实体
+	 * @param jdbc 数据源
+	 * @param t 返回类型
+	 * @return
+	 * @throws Exception
+	 */
+	public <T>List<T> getListByEntity(String sql, Object entity, NamedParameterJdbcDaoSupport jdbc,T t) throws Exception {
+		return getListByMap(sql, getParamMap(entity), jdbc, t);
 	}
 
 	/**
@@ -352,7 +388,7 @@ public class BaseDao {
 	 * @return
 	 */
 	public <T> List<T> getListByParam(String sql, NamedParameterJdbcDaoSupport jdbc, T t, Object... param) {
-		return (List<T>) jdbc.getJdbcTemplate().queryForList(sql, t.getClass(), param);
+		return (List<T>) jdbc.getJdbcTemplate().query(sql, new BeanPropertyRowMapper<T>((Class<T>) t.getClass()),param);
 	}
 
 	/**
@@ -640,8 +676,8 @@ public class BaseDao {
 	 */
 	private long getTotalRow(NamedParameterJdbcDaoSupport jdbc) {
 		String totalsql = "select found_rows()";
-		SqlRowSet queryForRowSet = jdbc.getJdbcTemplate().queryForRowSet(totalsql);
-		return queryForRowSet.getLong(1);
+		Long num = jdbc.getJdbcTemplate().queryForObject(totalsql, Long.class);
+		return num;
 	}
 
 	/**

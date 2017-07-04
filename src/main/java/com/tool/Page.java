@@ -1,7 +1,8 @@
 package com.tool;
 
 import java.util.List;
-import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
 
 public class Page<T> {
 
@@ -53,5 +54,8 @@ public class Page<T> {
 	public void setData(List<T> data) {
 		this.data = data;
 	}
-	
+	@Override
+	public String toString() {
+		return JSON.toJSONString(this);
+	}
 }
