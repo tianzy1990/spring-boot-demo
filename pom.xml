@@ -133,7 +133,7 @@
 									<destFileName>ROOT.war</destFileName><!--copy到目的路径下的文件名称 -->
 								</artifactItem>
 							</artifactItems>
-							<outputDirectory>D:\apache-tomcat-7.0.73eclipse\webapps</outputDirectory><!--将war直接部署到tomcat目录下 -->
+							<outputDirectory>D:\apache-tomcat-8.5.11\webapps</outputDirectory><!--将war直接部署到tomcat目录下 -->
 						</configuration>
 					</execution>
 				</executions>
