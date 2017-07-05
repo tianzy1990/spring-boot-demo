@@ -408,7 +408,7 @@ public class BaseDao {
 		KeyHolder keyholder = new GeneratedKeyHolder();
 		SqlParameterSource paramSource = new MapSqlParameterSource(map);
 		jdbc.getNamedParameterJdbcTemplate().update(sql, paramSource, keyholder, new String[] { key });
-		return jdbc.getNamedParameterJdbcTemplate().update(sql, map);
+		return keyholder.getKey().longValue();
 	}
 
 	/**
