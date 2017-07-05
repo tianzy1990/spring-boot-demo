@@ -23,11 +23,19 @@
 			<url>https://raw.github.com/venusdrogon/feilong-platform/repository</url>
 		</repository>
 	</repositories>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.4.RELEASE</version>
-	</parent>
+	<!-- <parent> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-parent</artifactId> 
+		<version>1.5.4.RELEASE</version> </parent> --><!--parent 方式 -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>1.5.4.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement><!--import pom 方式 -->
 	<dependencies>
 		<!--spring web mvc -->
 		<dependency>
@@ -104,13 +112,19 @@
 	<build>
 		<plugins>
 			<!-- war部署使用 更改名称 -->
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-war-plugin</artifactId> 
-				<configuration> <warName>ROOT</warName>war默认名称 </configuration> </plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<!-- <warName>ROOT</warName>修改war默认名称 -->
+					<failOnMissingWebXml>false</failOnMissingWebXml><!--忽略maven项目中的因为没有web.xml而报错-->
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<skip>true</skip><!--跳过在打包过程中的maven-test环节  -->
+					<skip>true</skip><!--跳过在打包过程中的maven-test环节 -->
 				</configuration>
 			</plugin>
 			<plugin>
