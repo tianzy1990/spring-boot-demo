@@ -4,6 +4,4 @@
 /logs
 *.log
 *.log.*
-.classpath
-.project
 .settings
