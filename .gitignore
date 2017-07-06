@@ -1,7 +1,11 @@
 /target/
 /.settings/
-# logs
+#logs
 /logs
 *.log
 *.log.*
-.settings
+/.settings
+/.classpath
+/.project
+/*.classpath
+/*.project
