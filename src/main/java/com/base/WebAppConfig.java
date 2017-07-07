@@ -1,17 +1,22 @@
 package com.base;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.base.datasource.DynamicDataSource;
 
 @Configuration
 public class WebAppConfig extends WebMvcConfigurerAdapter {
@@ -26,7 +31,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 	}
 	
     @Bean(name="dataSource1")
-    @Primary
     public DataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/test?characterEncoding=utf-8&useSSL=false");
@@ -58,13 +62,33 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     	dataSource.setPoolPreparedStatements(false);
     	return dataSource;
     }
+    
+    @Bean(name="dataSource")
+    @Primary
+    public DynamicDataSource dataSource(@Qualifier(value="dataSource1")DataSource dataSource1,@Qualifier(value="dataSource2")DataSource dataSource2) {
+    	DynamicDataSource dynamicDataSource = new DynamicDataSource();
+    	Map<Object, Object> targetDataSources=new HashMap<>();
+    	targetDataSources.put("dataSource1", dataSource1);
+    	targetDataSources.put("dataSource2", dataSource2);
+		dynamicDataSource.setTargetDataSources(targetDataSources);
+		dynamicDataSource.setDefaultTargetDataSource(dataSource1);
+    	return dynamicDataSource;
+    }
+    
     //如果将tomcat-jdbc排除 也不会有默认的事务关系者 而且多数据源时需要手动创建多个事务管理器
     @Bean(name = "txManager1")
-    public PlatformTransactionManager txManager1(@Qualifier(value="dataSource1")DataSource dataSource) {
+    @Order(10)
+    public PlatformTransactionManager txManager1(@Qualifier(value="dataSource")DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
-    @Bean(name = "txManager2")
-    public PlatformTransactionManager txManager2(@Qualifier(value="dataSource2")DataSource dataSource) {
-    	return new DataSourceTransactionManager(dataSource);
-    }
+//    @Bean(name = "txManager2")
+//    @Order(10)
+//    public PlatformTransactionManager txManager2(@Qualifier(value="dataSource2")DataSource dataSource) {
+//    	return new DataSourceTransactionManager(dataSource);
+//    }
+//    @Bean(name = "txManager3")
+//    @Order(10)
+//    public PlatformTransactionManager txManager3(@Qualifier(value="DynamicDataSource")DynamicDataSource dataSource) {
+//    	return new DataSourceTransactionManager(dataSource);
+//    }
 }

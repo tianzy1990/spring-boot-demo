@@ -29,6 +29,10 @@ public class BaseDao {
 	@Autowired
 	@Qualifier(value = "dataSource2")
 	private DataSource dataSource2;
+	
+	@Autowired
+	@Qualifier(value = "dataSource")
+	private DataSource dataSource;
 
 	public NamedParameterJdbcDaoSupport getDataSource1() {
 		NamedParameterJdbcDaoSupport namedParameterJdbcDaoSupport = new NamedParameterJdbcDaoSupport();
@@ -39,6 +43,11 @@ public class BaseDao {
 	public NamedParameterJdbcDaoSupport getDataSource2() {
 		NamedParameterJdbcDaoSupport namedParameterJdbcDaoSupport = new NamedParameterJdbcDaoSupport();
 		namedParameterJdbcDaoSupport.setDataSource(dataSource2);
+		return namedParameterJdbcDaoSupport;
+	}
+	public NamedParameterJdbcDaoSupport getDataSource() {
+		NamedParameterJdbcDaoSupport namedParameterJdbcDaoSupport = new NamedParameterJdbcDaoSupport();
+		namedParameterJdbcDaoSupport.setDataSource(dataSource);
 		return namedParameterJdbcDaoSupport;
 	}
 

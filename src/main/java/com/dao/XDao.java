@@ -19,4 +19,12 @@ public class XDao extends BaseDao {
 	public void testtransactional(String sql) {
 		getDataSource1().getJdbcTemplate().update(sql);
 	}
+	public void testaop(){
+		Map<String, Object> selectById = selectById("select * from city where id=?", 1l, getDataSource());
+		System.out.println(selectById);
+	}
+	public void testaopinsert(String sql, Map<String, Object> map, String key){
+		long insertByMap = insertByMap(sql, getDataSource(), map, key);
+		System.out.println(insertByMap);
+	}
 }

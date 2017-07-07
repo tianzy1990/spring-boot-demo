@@ -41,4 +41,10 @@ public class Home extends BaseController {
 		service.testdao();
 		return "ok";
 	}
+	@RequestMapping("/testaop/{dataSourcename}")
+	@ResponseBody
+	public String testaop( @PathVariable("dataSourcename") String name) {
+		service.testaop(name,"2","3");
+		return "ok";
+	}
 }
