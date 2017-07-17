@@ -6,7 +6,7 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
  * 
  * @Title: DynamicDataSource.java
  * @Package com.base.datasource
- * @Description: TODO
+ * @Description: 重写实现动态数据源
  * @author tianzy
  * @date 2017年7月7日下午3:50:53
  */
