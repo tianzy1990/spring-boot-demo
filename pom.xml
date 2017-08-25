@@ -86,7 +86,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.1.39</version>
+			<version>1.2.37</version>
 		</dependency>
 
 		<!--防止jsp不能解析当作文件下载 -->
