@@ -47,4 +47,11 @@ public class Home extends BaseController {
 		service.testaop(name,"2","3");
 		return "ok";
 	}
+	
+	@RequestMapping("/testThread")
+	@ResponseBody
+	public String testThread() throws Exception {
+		service.testThread();
+		return "ok";
+	}
 }

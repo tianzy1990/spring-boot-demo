@@ -27,4 +27,11 @@ public class XDao extends BaseDao {
 		long insertByMap = insertByMap(sql, getDataSource(), map, key);
 		System.out.println(insertByMap);
 	}
+	public Integer selectsku(){
+		Map<String, Object> selectById = selectById("select value from test where id=?", 1l, getDataSource1());
+		return Integer.valueOf(selectById.get("value").toString()).intValue();
+	}
+	public Integer reducesku(){
+		return getDataSource1().getJdbcTemplate().update("update test set value=value-1 where id=1");
+	}
 }
